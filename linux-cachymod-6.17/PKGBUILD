@@ -19,7 +19,7 @@
 : "${_kernel_suffix:=}"
 
 # Prevent AVX2 floating-point instructions. (Clear and XanMod default)
-: "${_prevent_avx2:=yes}"
+: "${_prevent_avx2:=no}"
 
 # Run the "trim.sh" script to trim the kernel
 # Deselects ~ 1,500 kernel options
@@ -27,7 +27,7 @@
 : "${_runtrim_script:=no}"
 
 # Tweak kernel options prior to a build via nconfig, gconfig or xconfig
-: "${_makenconfig:=no}"
+: "${_makenconfig:=yes}"
 : "${_makegconfig:=no}"
 : "${_makexconfig:=no}"
 
@@ -47,7 +47,7 @@
 # This PKGBUILD read the database kept if it exists
 #
 # More at this wiki page ---> https://wiki.archlinux.org/index.php/Modprobed-db
-: "${_localmodcfg:=no}"
+: "${_localmodcfg:=yes}"
 
 # Path to the list of used modules
 : "${_localmodcfg_path:=$HOME/.config/modprobed.db}"
@@ -57,10 +57,10 @@
 : "${_localmodcfg_minimal:=no}"
 
 # Enable TCP_CONG_BBR3
-: "${_tcp_bbr3:=no}"
+: "${_tcp_bbr3:=yes}"
 
 # Running with a 1000HZ, 800Hz, 750Hz, 600Hz, or 500Hz tick rate
-: "${_HZ_ticks:=1000}"
+: "${_HZ_ticks:=800}"
 
 # Choose between full or idle tickless type
 # Full tickless can give higher performances in various cases but, depending on
@@ -72,11 +72,11 @@
 # Select "voluntary" for desktop, matching the Clear kernel preemption.
 # Select "full" for low-latency desktop, matching the CachyOS kernel preemption.
 # Select "lazy" for low-latency desktop, for slightly better throughput.
-: "${_preempt:=dynamic}"
+: "${_preempt:=full}"
 
 # Select CPU compiler optimization
 # { generic, generic_v1, generic_v2, generic_v3, generic_v4, native, zen4 }
-: "${_processor_opt:=}"
+: "${_processor_opt:=native}"
 
 # Select build type { thin, clang, gcc }
 # thin:  Build the kernel with clang thin-LTO, auto suffix "-lto"
@@ -99,7 +99,7 @@
 # 3. Profile the kernel and convert the profile, see Generating...
 # 4. Put the profile into the source dir
 # 5. Build kernel again with _autofdo_profile_name specified
-: "${_autofdo:=yes}"
+: "${_autofdo:=no}"
 
 # Name for the AutoFDO profile
 : "${_autofdo_profile_name:=cachymod.afdo}"
@@ -150,6 +150,8 @@ source=(
     "trim.sh"
     "minimal-modprobed.db"
     "0001-rt.patch"
+    "0001-acpi-call.patch"
+    "0001-clang-polly.patch"
     "0002-bbr3.patch"
     "0003-block.patch"
     "0004-cachy.patch"
