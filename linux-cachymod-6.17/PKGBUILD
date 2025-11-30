@@ -27,7 +27,7 @@
 : "${_runtrim_script:=no}"
 
 # Tweak kernel options prior to a build via nconfig, gconfig or xconfig
-: "${_makenconfig:=yes}"
+: "${_makenconfig:=no}"
 : "${_makegconfig:=no}"
 : "${_makexconfig:=no}"
 
@@ -47,7 +47,7 @@
 # This PKGBUILD read the database kept if it exists
 #
 # More at this wiki page ---> https://wiki.archlinux.org/index.php/Modprobed-db
-: "${_localmodcfg:=yes}"
+: "${_localmodcfg:=no}"
 
 # Path to the list of used modules
 : "${_localmodcfg_path:=$HOME/.config/modprobed.db}"
