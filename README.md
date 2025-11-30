@@ -18,6 +18,10 @@ sudo pacman -Sy nvidia-open-dkms
 sudo pacman -Sy nvidia-dkms
 ```
 
+## Fork
+
+This is a personal fork not meant to be used by others and so may not work on your machine 
+
 ## Building
 
 Copy the `linux-cachymod-6.17` folder to a work area and change
