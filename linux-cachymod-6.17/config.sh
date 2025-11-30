@@ -189,6 +189,33 @@ scripts/config -d XEN_DEBUG_FS
 
 ### exit 0
 
+### Additional configuration :)
+scripts/config -e CONFIG_PROCESSOR_SELECT
+scripts/config -d CPU_SUP_HYGON -d CPU_SUP_CENTAUR -d CPU_SUP_ZHAOXIN
+scripts/config -d MODULE_UNLOAD
+scripts/config --set-val CONFIG_VGA_ARB_MAX_GPUS 1
+scripts/config -d MODULE_DECOMPRESS
+scripts/config -d CONFIG_BOOT_CONFIG
+scripts/config -d ZSWAP ### Use ZRAM
+scripts/config -d HIBERNATION
+scripts/config -d IA32_EMULATION
+scripts/config -d IRQ_TIME_ACCOUNTING
+scripts/config -d PSI
+scripts/config -d X86_VSYSCALL_EMULATION -d X86_IOPL_IOPERM
+scripts/config -d PARTITION_ADVANCED
+scripts/config -d COREDUMP
+scripts/config -d DETECT_HUNG_TASK -d HARDLOCKUP_DETECTOR -d SOFTLOCKUP_DETECTOR_INTR_STORM -d SOFTLOCKUP_DETECTOR
+scripts/config -d X86_CHECK_BIOS_CORRUPTION
+scripts/config -d KEXEC_HANDOVER
+scripts/config -d KPROBES -d SCHED_DEBUG -d SCHEDSTATS -d KALLSYMS_SELFTEST \
+            -d KALLSYMS_ALL -d EARLY_PRINTK -d FTRACE -d KALLSYMS \
+            -d STACKTRACE -e UNWINDER_GUESS -d DEBUG_SHIRQ -d SHRINKER_DEBUG \
+            -d PNP_DEBUG_MESSAGES -d MAC80211_DEBUGFS -d DEBUG_BOOT_PARAMS -d DEBUG_RODATA_TEST \
+            -d SCSI_CONSTANTS -d SCSI_LOGGING -d ZSMALLOC_STAT -d OVMF_DEBUG_LOG
+scripts/config -d ACPI_APEI -d PSTORE
+scripts/config -e TRIM_UNUSED_KSYMS
+
+
 if [[ $(uname -m) = *"x86"* ]]; then
     ### Default to IOMMU passthrough domain type.
     scripts/config -d IOMMU_DEFAULT_DMA_LAZY -e IOMMU_DEFAULT_PASSTHROUGH
@@ -212,7 +239,7 @@ if [[ $(uname -m) = *"x86"* ]]; then
     scripts/config -d PARAVIRT_TIME_ACCOUNTING
 
     ### Disable pvpanic device support.
-    scripts/config -d PVPANIC
+    ### scripts/config -d PVPANIC
 
     ### Require boot param to enable pressure stall information tracking.
     scripts/config -e PSI_DEFAULT_DISABLED
@@ -290,13 +317,5 @@ if [[ $(uname -m) = *"x86"* ]]; then
 
     ### Disable netfilter "control group" match support.
     scripts/config -d NETFILTER_XT_MATCH_CGROUP
-
-    ### Apply Clear defaults for NR_CPUS and NODES_SHIFT.
-    scripts/config -d CPUMASK_OFFSTACK -d MAXSMP
-    scripts/config --set-val NR_CPUS_RANGE_BEGIN 2
-    scripts/config --set-val NR_CPUS_RANGE_END 512
-    scripts/config --set-val NR_CPUS_DEFAULT 64
-    scripts/config --set-val NR_CPUS 512
-    scripts/config --set-val NODES_SHIFT 10
 fi
 
