@@ -4,6 +4,9 @@
 ### Exit immediately on error.
 set -e
 
+## Enable ACPI_CALL and POLLY_CLANG
+scripts/config -e ACPI_CALL -e POLLY_CLANG
+
 ### Set the minimal base_slice_ns option for BORE.
 ### 1000Hz = 2.0ms, 800Hz = 2.5ms, 600Hz = 1.6(6)ms, 500Hz = 2.0ms.
 scripts/config --set-val MIN_BASE_SLICE_NS 1600000
