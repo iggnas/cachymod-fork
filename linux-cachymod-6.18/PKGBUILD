@@ -16,13 +16,13 @@
 # E.g. { blank value, bmq, pds, rt, or 618, 618-bmq, 618-pds, 618-rt }
 # Or set to "auto" for automatic suffix { gcc, clang, lto }
 # Or set to blank value for no kernel suffix
-: ${_kernel_suffix:=}
+: ${_kernel_suffix:=618}
 
 # Prevent AVX2 floating-point instructions. (Clear and XanMod default)
 : ${_prevent_avx2:=no}
 
 # Tweak kernel options prior to a build via nconfig or xconfig
-: ${_makenconfig:=no}
+: ${_makenconfig:=yes}
 : ${_makexconfig:=no}
 
 # Transparent Hugepages
@@ -41,7 +41,7 @@
 # This PKGBUILD read the database kept if it exists
 #
 # More at this wiki page ---> https://wiki.archlinux.org/index.php/Modprobed-db
-: ${_localmodcfg:=no}
+: ${_localmodcfg:=yes}
 
 # The localmod db name (e.g. modprobed.db) or full path
 # The list of used modules can be found in the ~/.config/ folder
@@ -52,14 +52,14 @@
 : ${_localmodcfg_minimal:=no}
 
 # Enable TCP_CONG_BBR3
-: ${_tcp_bbr3:=no}
+: ${_tcp_bbr3:=yes}
 
 # Running tick rate { 1000, 800, 750, 625, 600, 500 }
 # Select 1000 if your machine has less than or equal to 16 CPUs.
 # Select 800 if you want a balance between latency and performance,
 # with more focus on latency. Otherwise, the best value is a mystery.
 # Select 625 or 500 if you want to minimize battery consumption.
-: ${_HZ_ticks:=1000}
+: ${_HZ_ticks:=800}
 
 # Choose between full or idle tickless type
 # Full tickless can give higher performances in various cases but, depending on
@@ -89,7 +89,7 @@
 # clang: Build kernel with clang, auto suffix "-clang"
 # thin:  Build kernel with clang thin-LTO, auto suffix "-lto"
 # full:  Build kernel with clang full-LTO; auto suffix "-lto"
-: ${_buildtype:=thin}
+: ${_buildtype:=full}
 
 # Enable AUTOFDO_CLANG for the first compilation,
 #  to create a kernel, which can be used for profiling
@@ -102,7 +102,7 @@
 # 3. Profile the kernel and convert the profile, see Generating...
 # 4. Put the profile into the source dir
 # 5. Build kernel again with _autofdo_profile_name specified
-: ${_autofdo:=no}
+: ${_autofdo:=yes}
 
 # Name for the AutoFDO profile
 : ${_autofdo_profile_name:=cachymod.afdo}
