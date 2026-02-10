@@ -1,5 +1,5 @@
 
-Prefer the previous cpu for wakeup v7
+Prefer the previous cpu for wakeup (prefer-idle-core patch v7)
 sched/fair: Wish list, please not forget limited CPU saturation
 
 EEVDF limited CPU saturation can be lack-luster with CPUs having
@@ -23,8 +23,8 @@ From Mario Roy
   Move the recent_used_cpu heuristic to the top, and check
   if an idle core
 
-Results
-  Tested with an AMD Ryzen Threadripper 3970X CPU (32/64)
+Testing
+  AMD Ryzen Threadripper 3970X CPU (32/64)
   EEVDF, EEVDF with patch, scx_cosmos, and BMQ schedulers
 
   Pinned is affined to the primary CPUs, excluding siblings [6]
@@ -252,8 +252,8 @@ Results:
 
 Signed-off-by: Mario Roy <>
 ---
- kernel/sched/fair.c | 64 +++++++++++++++++++++++++++++----------------
- 1 file changed, 42 insertions(+), 22 deletions(-)
+ kernel/sched/fair.c | 66 +++++++++++++++++++++++++++++----------------
+ 1 file changed, 43 insertions(+), 23 deletions(-)
 
 diff -uarp a/kernel/sched/fair.c b/kernel/sched/fair.c
 --- a/kernel/sched/fair.c
@@ -370,7 +370,7 @@ diff -uarp a/kernel/sched/fair.c b/kernel/sched/fair.c
  	}
  	rcu_read_unlock();
  
-@@ -10177,7 +10197,7 @@ static bool sched_use_asym_prio(struct s
+@@ -10177,7 +10197,7 @@ static bool sched_use_asym_prio(struct sched_domain *sd, int cpu)
  	if (!sched_smt_active())
  		return true;
  
