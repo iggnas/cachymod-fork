@@ -104,8 +104,8 @@
 # 5. Build kernel again with _autofdo_profile_name specified
 : ${_autofdo:=no}
 
-# Name for the AutoFDO profile
-: ${_autofdo_profile_name:=cachymod.afdo}
+# Name for the AutoFDO profile e.g. cachymod.afdo (can be any name)
+: ${_autofdo_profile_name:=}
 
 
 # ATTENTION: Do not modify after this line
@@ -119,7 +119,7 @@ else
     _CYAN= _NC=
 fi
 
-if [[ "$_buildtype" =~ ^(gcc|clang)$ ]]; then
+if [[ "$_buildtype" =~ ^(gcc)$ ]]; then
     _autofdo="no"
     _autofdo_profile_name=""
 fi
@@ -137,14 +137,14 @@ fi
 
 _pkgsuffix=cachymod
 _major=6.18
-_minor=15
+_minor=21
 pkgver=${_major}.${_minor}
 _stable=${_major}.${_minor}
 #_stable=${_major}
 
 _srcname=linux-${_stable}
 pkgdesc='CachyMod Linux Kernel with other patches and improvements'
-pkgrel=1
+pkgrel=2
 _kernver="$pkgver-$pkgrel"
 _kernuname="${pkgver}-${_pkgsuffix}"
 arch=('x86_64')
@@ -163,20 +163,19 @@ source=(
     "config"
     "config.sh"
     "minimal-modprobed.db"  # used if _localmodcfg=yes and _localmodcfg_minimal=yes
-    "0000-rt.patch"
 
     # CachyOS
+    "0001-rt-i915.patch"
     "0001-amd-pstate.patch"
-    "0004-bbr3.patch"
-    "0005-cachy.patch"
-    "0006-crypto.patch"
-    "0007-fixes.patch"
-    "0008-hdmi.patch"
-    "0009-intel-pstate.patch"
+    "0003-bbr3.patch"
+    "0004-cachy.patch"
+    "0005-crypto.patch"
+    "0006-fixes.patch"
+    "0007-hdmi.patch"
+    "0008-intel-pstate.patch"
 
     # CachyMod
     "0040-revert-dot5-sched-change.patch"
-    "0050-misc-sched-fixes.patch"
     "0100-kconfig-add-800Hz.patch"
     "0200-clearlinux-extras.patch"
     "0210-cachymod-misc.patch"
@@ -198,14 +197,30 @@ source=(
 # LLVM makedepends
 if [[ "$buildtype" =~ (lto|clang) ]]; then
     makedepends+=(clang llvm lld)
-    source+=("dkms-clang.patch" "flags-clang.patch")
-    [[ "$_autofdo" =~ ^(yes|y|1)$ ]] && source+=("autofdo.patch")
+    source+=("dkms-clang.patch")
+
+    [[ -z "$_build_debug" || "$_build_debug" =~ ^(no|n|0)$ ]] && \
+        source+=("flags-clang.patch")
+
+    [[ "$_autofdo" =~ ^(yes|y|1)$ ]] && \
+        source+=("autofdo.patch")
 
     BUILD_FLAGS=(CC=clang LD=ld.lld LLVM_IAS=1)
     CLANG_BIN=$(which clang) ; CLANG_BIN="${CLANG_BIN%clang}"
 
     if [[ "$CLANG_BIN" != "/usr/bin/" && -x "${CLANG_BIN%/}/llvm-strip" ]]; then
-        BUILD_FLAGS+=(LLVM="$CLANG_BIN")
+        BUILD_FLAGS+=(
+            LLVM="$CLANG_BIN"
+            LIBCLANG_PATH="${CLANG_BIN%/}/../lib"
+            AR=llvm-ar
+            AS=llvm-as
+            NM=llvm-nm
+            OBJCOPY=llvm-objcopy
+            OBJDUMP=llvm-objdump
+            RANLIB=llvm-ranlib
+            READELF=llvm-readelf
+            STRIP=llvm-strip
+        )
     else
         BUILD_FLAGS+=(LLVM=1)
     fi
